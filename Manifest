@@ -1,0 +1,7 @@
+./CHANGELOG
+./LICENSE
+./Manifest
+./README
+./Rakefile
+./lib/shadow/rake_task_redefine_task.rb
+./lib/shadow.rb
