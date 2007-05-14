@@ -40,5 +40,5 @@ end
 
 desc 'Run tests.'
 Rake::Task.redefine_task("test") do
-  system "ruby -Ibin:lib:test test/unit/test_shadow.rb #{ENV['METHOD'] ? "--name=#{ENV['METHOD']}" : ""}"
+  system "ruby -Ibin:lib:test test/integration/test_shadow.rb #{ENV['METHOD'] ? "--name=#{ENV['METHOD']}" : ""}"
 end
