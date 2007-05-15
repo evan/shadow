@@ -6,26 +6,28 @@ require 'active_record'
 class Shadow < Mongrel::HttpHandler
   attr_reader :pid
 
-  def initialize(config, environment, name, address = '0.0.0.0', port = '2001')
-    @config = YAML.load_file(config)[environment.to_s]
-    @db = db
+  def initialize(config, environment, name, address = '0.0.0.0', port = '2001', sleep = nil)
+    ActiveRecord::Base.establish_connection(YAML.load_file(config)[environment.to_s])
+    @sleep = sleep
     @pid = serve(self, name, address, port)
   end
   
   def process(request, response)
+    sleep(rand * @sleep) if @sleep
     table, id = request.params["PATH_INFO"].split("/")
     begin
       obj, code = find(table, id), 200
       case request.params["REQUEST_METHOD"]
         when "PUT", "POST"
-          Shadow.d
+          obj.update_attributes(YAML.load(request.body.read))
           obj.save! 
         when "DELETE"
-          obj.destroy!
+          obj.destroy
       end
       code = 200
+      obj = obj.attributes
     rescue Object => e
-      obj, code = e, 400
+      obj, code = e.to_s, 400
     end
     response.start(code) do |head, out|
       head["Content-Type"] = "text/yaml"
@@ -38,14 +40,8 @@ class Shadow < Mongrel::HttpHandler
     id ? klass.find(id) : klass.new
   end
   
-  ### configure stuff ####
-  
-  def db
-    ActiveRecord::Base.allow_concurrency = true
-    ActiveRecord::Base.establish_connection(@config)
-    ActiveRecord::Base.connection
-  end
-    
+  ### configure mongrel ####
+      
   def serve(me, name, address, port)
     fork do
       Mongrel::Configurator.new :host => address, :pid_file => "/tmp/shadow.#{name}.pid" do
