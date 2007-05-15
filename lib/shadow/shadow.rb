@@ -13,10 +13,29 @@ class Shadow < Mongrel::HttpHandler
   end
   
   def process(request, response)
-    response.start(200) do |head, out|
-      head["Content-Type"] = "text/html"
-      out.write "Hello\n"
+    table, id = request.params["PATH_INFO"].split("/")
+    begin
+      obj, code = find(table, id), 200
+      case request.params["REQUEST_METHOD"]
+        when "PUT", "POST"
+          Shadow.d
+          obj.save! 
+        when "DELETE"
+          obj.destroy!
+      end
+      code = 200
+    rescue Object => e
+      obj, code = e, 400
     end
+    response.start(code) do |head, out|
+      head["Content-Type"] = "text/yaml"
+      out.write obj.to_yaml
+    end
+  end
+  
+  def find(table, id)
+      klass = Class.new(ActiveRecord::Base) { self.table_name = table }
+      id ? klass.find(id) : klass.new
   end
   
   ### configure stuff ####
@@ -32,7 +51,7 @@ class Shadow < Mongrel::HttpHandler
       Mongrel::Configurator.new :host => address, :pid_file => "/tmp/shadow.#{name}.pid" do
         listener :port => port do
           puts "** Serving at #{address}:#{port}/#{name} (pid #{Process.pid})"
-          uri "/#{name}", :handler => me
+          uri "/#{name}/", :handler => me
           setup_signals or run and write_pid_file and join
         end
       end
