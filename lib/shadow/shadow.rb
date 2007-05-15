@@ -18,7 +18,7 @@ class Shadow < Mongrel::HttpHandler
       obj, code = find(table, id), 200
       case request.params["REQUEST_METHOD"]
         when "PUT", "POST"
-#          Shadow.d
+          Shadow.d
           obj.save! 
         when "DELETE"
           obj.destroy!
