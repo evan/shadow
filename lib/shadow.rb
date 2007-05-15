@@ -9,7 +9,7 @@ class Shadow < Mongrel::HttpHandler
 
   def initialize(config, environment, name, address = '0.0.0.0', port = '2001', sleep = nil)
     ActiveRecord::Base.establish_connection(YAML.load_file(config)[environment.to_s])
-    ActiveRecord::Base.allow_concurrency = false    
+    ActiveRecord::Base.allow_concurrency = false # AR doesn't release connections fast enough
     @sleep = sleep
     @sync = Sync.new
     @pid = serve(self, name, address, port)
@@ -20,7 +20,7 @@ class Shadow < Mongrel::HttpHandler
     table, id = request.params["PATH_INFO"].split("/")
 
     obj, code = nil, 200
-    @sync.synchronize(:EX) do # fuckin AR
+    @sync.synchronize(:EX) do # sad
       begin
         obj = find(table, id)
         case request.params["REQUEST_METHOD"]
