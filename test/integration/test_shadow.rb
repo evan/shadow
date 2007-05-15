@@ -9,17 +9,14 @@ require "#{DIR}/../../lib/shadow"
 
 class ShadowText < Test::Unit::TestCase
   APP, HOST, PORT = "menagerie", "0.0.0.0", 2001
-  
-  def setup
-    $client ||= RFuzz::HttpClient.new(HOST, PORT)
-    $server ||= Shadow.new("#{DIR}/../database.yml", "test", APP, HOST, PORT, 1)
-    require "#{DIR}/../schema"
-  end
-  
+  $client = RFuzz::HttpClient.new(HOST, PORT)
+  $server = Shadow.new("#{DIR}/../database.yml", "test", APP, HOST, PORT, 1)
+  require "#{DIR}/../schema"
+    
   def test_get
     # successful
     response = $client.get("/#{APP}/cats/1")
-    assert_equal ActiveRecord::Cat.find(1).attributes.to_yaml, response.http_body
+    assert_match /name: Blue/, response.http_body
     assert_equal "text/yaml", response["CONTENT_TYPE"]
     assert_equal "200", response.http_status
     # missing
@@ -34,30 +31,48 @@ class ShadowText < Test::Unit::TestCase
   end
   
   def test_post
-    response = $client.put("/#{APP}/cats/1", :body => {"name" => "Tabby"}.to_yaml)
+    response = $client.put("/#{APP}/cats/2", :body => {"name" => "Tabby"}.to_yaml)
+    assert_equal "Tabby", YAML.load(response.http_body)["name"]
+    response = $client.get("/#{APP}/cats/2")
     assert_equal "Tabby", YAML.load(response.http_body)["name"]
   end
   
   def test_delete
-    dog = ActiveRecord::Dog.find(1).attributes
     response = $client.delete("/#{APP}/dogs/1")
-    assert_equal dog.to_yaml, response.http_body
+    assert_match /name: Rover/, response.http_body
     response = $client.delete("/#{APP}/dogs/1")
     assert_match /Couldn't find/, response.http_body
     assert_equal "400", response.http_status
   end
   
-  def test_threading
+  def test_concurrent_reads
+    correct_result = $client.get("/#{APP}/cats/1").http_body
     assert_nothing_raised do
       pids = []
-      10.times do 
-        pids << fork do
-          $client.get("/#{APP}/cats/1") 
+      100.times do
+        pids << fork do # can't use Thread because RFuzz isn't threadsafe?
+          result = $client.get("/#{APP}/cats/1").http_body
+          puts "Response error: #{result}" unless correct_result == result 
         end 
       end
-      pids.each do |pid|
-        Process.wait(pid)
+      pids.each {|pid| Process.wait(pid)}
+    end
+  end
+
+  def test_concurrent_writes
+    assert_nothing_raised do
+      pids = []
+      100.times do
+        pids << fork do
+          result = $client.put("/#{APP}/dogs", 
+                                        :body => {"name" => Process.pid.to_s}.to_yaml)
+          id = YAML.load(result.http_body)["id"]
+          sleep(2)
+          result = $client.get("/#{APP}/dogs/#{id}").http_body
+          puts "Response error: #{result.inspect}" unless result =~ /#{Process.pid}/
+        end 
       end
+      pids.each {|pid| Process.wait(pid)}
     end
   end
     

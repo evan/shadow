@@ -17,10 +17,12 @@ module ActiveRecord
     end
   end
 
-  class Dog < Base; end
   class Cat < Base; end
-  
-  Dog.create(:name => "Rover", :size => 5)
   Cat.create(:name => "Blue", :size => 3)
+  Cat.create(:name => "Tom", :size => 6)
+  
+  class Dog < Base; end
+  Dog.create(:name => "Rover", :size => 5)
+  Dog.create(:name => "Spot", :size => 5)
 
 end
