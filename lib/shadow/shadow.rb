@@ -18,7 +18,7 @@ class Shadow < Mongrel::HttpHandler
       obj, code = find(table, id), 200
       case request.params["REQUEST_METHOD"]
         when "PUT", "POST"
-          Shadow.d
+#          Shadow.d
           obj.save! 
         when "DELETE"
           obj.destroy!
@@ -34,8 +34,8 @@ class Shadow < Mongrel::HttpHandler
   end
   
   def find(table, id)
-      klass = Class.new(ActiveRecord::Base) { self.table_name = table }
-      id ? klass.find(id) : klass.new
+    klass = Class.new(ActiveRecord::Base) { self.table_name = table }
+    id ? klass.find(id) : klass.new
   end
   
   ### configure stuff ####
