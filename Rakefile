@@ -22,7 +22,7 @@ begin
     p.changes = `cat CHANGELOG`[/^([\d\.]+\. .*)/, 1]
     p.email = "evan at cloudbur dot st"
     p.summary = p.description
-    p.url = "http://blog.evanweaver.com"
+    p.url = "http://blog.evanweaver.com/pages/code#shadow"
     p.need_tar = false
     p.need_tar_gz = true
     p.test_globs = ["*_test.rb"]
