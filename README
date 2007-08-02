@@ -12,7 +12,7 @@ file.
 
 Shadow requires a Rails-style <tt>database.yml</tt> configuration.
 
-Start the server with LOVE:
+Start the server with:
 
   shadow [path_to/database.yml] [environment] [route]
 
