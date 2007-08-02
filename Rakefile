@@ -21,7 +21,7 @@ begin
     p.need_tar_gz = true
     p.extra_deps = ["activerecord", "mongrel"]
 
-    p.rdoc_pattern = /\.\/bin|\.\/lib|README|CHANGELOG|LICENSE/
+    p.rdoc_pattern = /\.\/bin|\.\/lib\/shadow\.rb|README|CHANGELOG|LICENSE/
     
   end
             

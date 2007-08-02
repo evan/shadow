@@ -18,7 +18,7 @@ Start the server with:
 
 Now you can query it at:
 
-  http://0.0.0.0/route/table_name/record_id
+  http://0.0.0.0:2001/route/table_name/record_id
   
 You need to make RESTful HTTP requests (GET, POST, PUT, or DELETE), with YAML form payloads for POST and PUT.
 
