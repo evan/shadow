@@ -15,6 +15,7 @@ class Shadow < Mongrel::HttpHandler
     @pid = serve(self, name, address, port)
   end
   
+  # Implement the <tt>mongrel</tt> event handler. Responds to all four HTTP methods.  
   def process(request, response)
     sleep(rand * @sleep) if @sleep
     table, id = request.params["PATH_INFO"].split("/")
@@ -42,13 +43,13 @@ class Shadow < Mongrel::HttpHandler
     end
   end
   
+  # Finds and returns an ActiveRecord instance (returns a new record if <tt>id</tt> is nil). Dynamically instantiates an ActiveRecord parent class for each call. 
   def find(table, id)
     klass = Class.new(ActiveRecord::Base) { self.table_name = table }
     id ? klass.find(id) : klass.new
   end
-  
-  ### configure mongrel ###
-      
+    
+  # Configure mongrel and start an instance of ourselves.      
   def serve(me, name, address, port)
     fork do
       Mongrel::Configurator.new :host => address, :pid_file => "/tmp/shadow.#{name}.pid" do
@@ -61,7 +62,7 @@ class Shadow < Mongrel::HttpHandler
     end
   end
 
-  ### debugging ###
+  private
   
   def self.d
     require 'ruby-debug'; Debugger.start; debugger

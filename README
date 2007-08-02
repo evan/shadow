@@ -1,11 +1,24 @@
 
 Shadow
 
-DESCRIPTION
+A zero-configuration YAML RESTful ActiveRecord server.
 
-A zero-configuration RESTful ActiveRecord server.
-
-COPYRIGHT
+== License
 
 Copyright (c) 2007 Cloudburst, LLC. See the included LICENSE 
 file.
+
+== Usage
+
+Shadow requires a Rails-style <tt>database.yml</tt> configuration.
+
+Start the server with:
+
+  shadow [path_to/database.yml] [environment] [route]
+
+Now you can query it at:
+
+  http://0.0.0.0/route/table_name/record_id
+  
+You need to make RESTful HTTP requests (GET, POST, PUT, or DELETE), with YAML form payloads for POST and PUT.
+
