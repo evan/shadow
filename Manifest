@@ -6,10 +6,5 @@
 ./bin/shadow
 ./lib/shadow/rake_task_redefine_task.rb
 ./lib/shadow.rb
-./test/database.yml
 ./test/integration/test_shadow.rb
-./test/log/mongrel_debug/access.log
-./test/log/mongrel_debug/files.log
-./test/log/mongrel_debug/objects.log
-./test/log/mongrel_debug/threads.log
 ./test/schema.rb
