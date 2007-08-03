@@ -2,7 +2,6 @@ test/schema.rb
 test/integration/test_shadow.rb
 test/database.yml
 lib/shadow.rb
-lib/shadow/rake_task_redefine_task.rb
 bin/shadow
 Rakefile
 README
