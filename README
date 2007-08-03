@@ -22,3 +22,7 @@ Now you can query it at:
   
 You need to make RESTful HTTP requests (GET, POST, PUT, or DELETE), with YAML form payloads for POST and PUT.
 
+== Further resources
+
+* http://blog.evanweaver.com/pages/code#shadow
+* http://rubyforge.org/forum/forum.php?forum_id=15381
