@@ -8,6 +8,10 @@ A zero-configuration YAML RESTful ActiveRecord server.
 Copyright (c) 2007 Cloudburst, LLC. See the included LICENSE 
 file.
 
+== Installation
+
+  sudo gem install shadow
+
 == Usage
 
 Shadow requires a Rails-style <tt>database.yml</tt> configuration.
