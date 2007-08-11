@@ -3,8 +3,6 @@ test/integration/test_shadow.rb
 test/database.yml
 lib/shadow.rb
 bin/shadow
-Rakefile
 README
-Manifest
 LICENSE
 CHANGELOG
