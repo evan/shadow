@@ -10,7 +10,7 @@ echoe = Echoe.new("shadow") do |p|
   p.summary = p.description
 
   p.url = "http://blog.evanweaver.com/pages/code#shadow"
-  p.docs_host = "blog.evanweaver.com:~/www/snax/public/files/doc/"
+  p.docs_host = "blog.evanweaver.com:~/www/bax/public/files/doc/"
 
   p.extra_deps = ["activerecord", "mongrel"]
 end
