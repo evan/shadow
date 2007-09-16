@@ -8,6 +8,8 @@ A zero-configuration YAML RESTful ActiveRecord server.
 Copyright (c) 2007 Cloudburst, LLC. See the included LICENSE 
 file.
 
+The public certificate for this gem is at http://rubyforge.org/frs/download.php/25331/evan_weaver-original-public_cert.pem.
+
 == Installation
 
   sudo gem install shadow
